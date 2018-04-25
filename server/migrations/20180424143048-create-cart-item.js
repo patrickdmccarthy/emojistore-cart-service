@@ -8,13 +8,24 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      quantity: {
+      itemId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
+      symbol: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      quantity: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
       price: {
+        allowNull: false,
         type: Sequelize.FLOAT
       },
       createdAt: {
@@ -25,7 +36,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      CartId: {
+      cartId: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',
         allowNull: false,

@@ -2,9 +2,23 @@
 module.exports = (sequelize, DataTypes) => {
   var CartItem = sequelize.define('CartItem', {
     quantity: DataTypes.INTEGER,
-    name: DataTypes.STRING,
-    price: DataTypes.FLOAT,
-    CartId: {
+    name:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    itemId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    symbol: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    price: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    cartId: {
       type: DataTypes.INTEGER,
       allowNull: false
     }
@@ -12,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
 
   CartItem.associate = (models) => {
     CartItem.belongsTo(models.Cart, {
-      foreignKey: 'CartId',
+      foreignKey: 'cartId',
     });
   };
 

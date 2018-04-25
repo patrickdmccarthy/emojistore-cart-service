@@ -8,7 +8,7 @@ module.exports = (app) => {
 
   app.post('/api/carts', cartsController.create);
 
-  app.get('/api/carts/:userId', cartsController.getUserCart);
+  app.get('/api/carts/:id', cartsController.getUserCart);
 
   app.post('/api/cartItems', cartitemsController.create);
 };

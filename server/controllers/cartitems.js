@@ -4,9 +4,11 @@ module.exports = {
   create(req, res) {
     return CartItem
       .create({
+        itemId: req.body.id,
         name: req.body.name,
+        symbol: req.body.symbol,
         price: req.body.price,
-        CartId: req.body.CartId,
+        cartId: req.body.cartId,
         quantity: 1,
       })
       .then(cartItem => res.status(201).send(cartItem))
