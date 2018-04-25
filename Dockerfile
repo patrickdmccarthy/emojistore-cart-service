@@ -11,5 +11,5 @@ COPY . /usr/src/app
 FROM node:alpine
 COPY --from=builder /usr/src/app/ /app
 WORKDIR /app
-EXPOSE 3000
+EXPOSE 3002
 CMD ["npm", "run-script", "start"]
