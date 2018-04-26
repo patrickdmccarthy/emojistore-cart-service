@@ -10,6 +10,7 @@ module.exports = {
       .then(cart => res.status(201).send(cart))
       .catch(error => res.status(400).send(error));
   },
+
   getUserCart(req, res) {
     return Cart.findById(req.params.id, {
       include: [ CartItem ],
@@ -36,6 +37,6 @@ module.exports = {
         .catch(error => res.status(400).send(error));
         }
       })
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
     }
 };

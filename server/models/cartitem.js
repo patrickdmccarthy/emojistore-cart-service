@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    symbol: {
-      type: DataTypes.STRING,
+    img: {
+      type: DataTypes.JSON,
       allowNull: false
     },
     price: {

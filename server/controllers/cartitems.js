@@ -6,13 +6,16 @@ module.exports = {
       .create({
         itemId: req.body.id,
         name: req.body.name,
-        symbol: req.body.symbol,
+        img: req.body.img,
         price: req.body.price,
         cartId: req.body.cartId,
         quantity: 1,
       })
       .then(cartItem => res.status(201).send(cartItem))
-      .catch(error => res.status(400).send(error));
+      .catch(error => {
+        console.log(error)
+        return res.status(400).send(error)
+        });
   },
 
   update(req, res) {
@@ -46,7 +49,7 @@ module.exports = {
 
         return cartItem
           .destroy()
-          .then(() => res.status(200).send())
+          .then(() => res.status(204).send())
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
