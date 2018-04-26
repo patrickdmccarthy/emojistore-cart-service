@@ -16,9 +16,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      symbol: {
+      img: {
         allowNull: false,
-        type: Sequelize.STRING
+        type: Sequelize.JSON
       },
       quantity: {
         allowNull: false,
