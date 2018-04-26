@@ -14,4 +14,41 @@ module.exports = {
       .then(cartItem => res.status(201).send(cartItem))
       .catch(error => res.status(400).send(error));
   },
+
+  update(req, res) {
+    return CartItem.findById(req.params.id)
+    .then( cartItem => {
+      if (!cartItem) {
+        return res.status(404).send({
+          message: 'CartItem Not Found',
+        });
+      }
+
+      return cartItem
+      .update({
+        quantity: req.body.quantity
+      })
+      .then(updatedCartItem => res.status(200).send(updatedCartItem))
+      .catch(error => res.status(400).send(error));
+  })
+  .catch(error => res.status(400).send(error));
+  },
+
+  destroy(req, res) {
+    return CartItem
+      .findById( req.params.id)
+      .then(cartItem => {
+        if (!cartItem) {
+          return res.status(404).send({
+            message: 'CartItem Not Found',
+          });
+        }
+
+        return cartItem
+          .destroy()
+          .then(() => res.status(200).send())
+          .catch(error => res.status(400).send(error));
+      })
+      .catch(error => res.status(400).send(error));
+    }
 };
