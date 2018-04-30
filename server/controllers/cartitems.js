@@ -13,7 +13,6 @@ module.exports = {
       })
       .then(cartItem => res.status(201).send(cartItem))
       .catch(error => {
-        console.log(error)
         return res.status(400).send(error)
         });
   },
