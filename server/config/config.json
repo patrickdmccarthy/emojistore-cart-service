@@ -2,21 +2,21 @@
   "development": {
     "username": "postgres",
     "password": null,
-    "emojistore": "emojistore_development",
+    "dbName": "emojistore_development",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": null,
-    "emojistore": "emojistore_test",
+    "dbName": "emojistore_test",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
   "production": {
     "username": "postgres",
     "password": null,
-    "emojistore": "emojistore_production",
+    "dbName": "emojistore_production",
     "host": "127.0.0.1",
     "dialect": "postgres"
   }

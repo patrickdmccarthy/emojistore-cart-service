@@ -68,8 +68,8 @@ describe('Carts', () => {
   });
 
   describe('GET /carts/:id', () => {
-    it('it should GET a cart by the given id', (done) => {
-      let cart = db.Cart.create({ userId: 1})
+    it('it should GET a cart by the given id', () => {
+      return cart = db.Cart.create({ userId: 1})
       .then(cart => {
         return chai.request(app)
         .get('/carts/' + cart.toJSON().id)
@@ -80,7 +80,6 @@ describe('Carts', () => {
           expect(res.body).to.have.property('purchased');
           expect(res.body.userId).to.equal(1);
           expect(res.body.purchased).to.equal(false);
-          done();
         });
       });
     });
@@ -95,28 +94,52 @@ describe('Carts', () => {
     });
   });
 
-  describe('POST /checkout', function() {
-    // POST - create new cart
-    it('should checkout', function() {
-      let cart = db.Cart.create({ userId: 2})
-      .then(cart => {
+  describe('PUT /checkout', function() {
+    // PUT - checkout cart
+    it('should fail if address is not included', function() {
+      return db.Cart.create({ userId: 2}).then((cart) => {
         return chai.request(app)
-          .post('/checkout')
-          .send({
-            userId: 42
-          })
-          .then(function(res) {
-            expect(res).to.have.status(200);
-            expect(res).to.be.json;
-            expect(res.body).to.be.an('object');
-            expect(res.body.purchased).to.equal(true);
-          })
+        .put('/checkout')
+        .send({
+          id: cart.id
+
+        })
+        .then(function(res) {
+          expect(res).to.have.status(400);
+          expect(res).to.be.json;
+          expect(res.error).to.exist;
+        })
       })
     });
 
-    // POST -  404
+    // PUT - checkout cart
     it('should checkout', function() {
-      let cart = db.Cart.create({ userId: 2})
+      return db.Cart.create({ userId: 2}).then((cart) => {
+        return chai.request(app)
+        .put('/checkout')
+        .send({
+          id: cart.id,
+          firstName: 'test',
+          lastName: 'user',
+          address1: '123 fake street',
+          address2: 'apartment 1',
+          city: 'fakeville',
+          state: 'FK',
+          zip: '12345',
+          country: 'FK',
+        })
+        .then(function(res) {
+          expect(res).to.have.status(200);
+          expect(res).to.be.json;
+          expect(res.body).to.be.an('object');
+          expect(res.body.purchased).to.equal(true);
+        })
+      })
+    });
+
+    // PUT -  404
+    it('should return 404 when the cart is not found', function() {
+      return cart = db.Cart.create({ userId: 2})
       .then(cart => {
         return chai.request(app)
           .post('/checkout')

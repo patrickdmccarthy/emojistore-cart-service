@@ -33,12 +33,16 @@ module.exports = {
     .then(function (cart) {
       if (cart) {
         const address = omit(req.body, 'id')
-        cart.updateAttributes({
-          purchased: true,
-          ...address
-        })
-        .then(cart => res.status(200).send(cart))
-        .catch(error => res.status(400).send(error));
+        if(Object.keys(address).length < 8) {
+          throw({error: 'missing address fields'})
+        } else {
+          cart.updateAttributes({
+            purchased: true,
+            ...address
+          })
+          .then(cart => res.status(200).send(cart))
+          .catch(error => res.status(400).send(error));
+          }
         } else {
           return res.status(404).send({
             message: 'Cart Not Found',
