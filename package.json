@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prestart": "node_modules/.bin/sequelize db:create || exit 0; node_modules/.bin/sequelize db:migrate",
+    "prestart": "node_modules/.bin/sequelize --env='production' db:create || exit 0; node_modules/.bin/sequelize --env='production' db:migrate",
     "start:dev": "nodemon index.js",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
