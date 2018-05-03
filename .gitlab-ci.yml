@@ -1,0 +1,99 @@
+#
+# Official image for Hashicorp's Terraform. It uses light image which is Alpine
+# based as it is much lighter.
+#
+# Entrypoint is also needed as image by default set `terraform` binary as an
+# entrypoint.
+image:
+  name: hashicorp/terraform:light
+  entrypoint:
+    - '/usr/bin/env'
+    - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
+# Default output file for Terraform plan
+variables:
+  PLAN: plan.tfplan
+  PROJECT: ${PROJECT}
+
+cache:
+  paths:
+    - .terraform
+
+before_script:
+  - cd terraform
+  - terraform --version
+  - terraform init
+
+validate:
+  stage: validate
+  tags:
+    - terraformer
+  script:
+    - terraform validate
+
+plan:
+  stage: build
+  tags:
+    - terraformer
+  script:
+    - terraform plan -out=$PLAN
+  artifacts:
+    name: plan
+    paths:
+      - terraform/$PLAN
+
+apply:
+  stage: deploy
+  tags:
+    - terraformer
+  script:
+    - terraform apply -auto-approve -input=false $PLAN
+  dependencies:
+    - plan
+  only:
+    - master
+
+stages:
+  - validate
+  - build
+  - deploy
+  - docker-build
+  - docker-lint
+  - docker-deploy
+
+docker-lint:
+  stage: docker-lint
+  before_script:
+    - docker version
+  script:
+    - docker run --rm --env CODECLIMATE_CODE="$PWD" -v "$PWD":/code -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/cc:/tmp/cc codeclimate/codeclimate analyze
+    - docker run --rm -v "$PWD:/app" node:alpine /bin/sh -c "cd /app; npm install; chmod -R 777 *"
+    - docker run --rm -e "SNYK_TOKEN=7ce645a9-8bf8-4f8a-9240-9e34855d50bf" -v "$PWD:/project" snyk/snyk-cli:npm test
+  allow_failure: true
+  tags:
+    - ${PROJECT}
+
+docker-build:
+  stage: docker-build
+  before_script:
+    - docker version
+  script:
+    - docker build -t ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${SERVICE_NAME}:${CI_COMMIT_SHA:0:8} .
+    - $(aws ecr get-login --no-include-email --region=${AWS_REGION})
+    - docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${SERVICE_NAME}:${CI_COMMIT_SHA:0:8}
+  tags:
+    - ${PROJECT}
+  only:
+    - master
+
+docker-deploy:
+  stage: docker-deploy
+  before_script:
+    - docker version
+  script:
+    - ecs-deploy -t 300 -r ${AWS_REGION} -m 0 -M 200 -c ${PROJECT} -n ${SERVICE_NAME} -i ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${SERVICE_NAME}:${CI_COMMIT_SHA:0:8}
+  tags:
+    - ${PROJECT}
+  only:
+    - master
+
