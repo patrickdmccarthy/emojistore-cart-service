@@ -16,13 +16,13 @@ describe('Cart Items', () => {
     done();
   });
 
-  describe('POST /api/cartItems', function() {
+  describe('POST /cartItems', function() {
     // POST - create new cart
     it('should create new cartItem', function() {
       let cart = db.Cart.create({ userId: 1})
       .then(cart => {
         return chai.request(app)
-          .post('/api/cartItems')
+          .post('/cartItems')
           .send({
             id: 7,
             name: 'white socks',
@@ -45,7 +45,7 @@ describe('Cart Items', () => {
       let cart = db.Cart.create({ userId: 1})
       .then(cart => {
         return chai.request(app)
-          .post('/api/cartItems')
+          .post('/cartItems')
           .send({
             name: 'socks with missing fields',
             img: { small: 'image_url' },
@@ -58,7 +58,7 @@ describe('Cart Items', () => {
     });
   });
 
-  describe('PUT /api/cartitems/:id', () => {
+  describe('PUT /cartitems/:id', () => {
     it('it should GET a cart by the given id', (done) => {
       let cart = db.Cart.create({ userId: 1})
       .then(cart => {
@@ -72,7 +72,7 @@ describe('Cart Items', () => {
         })
         .then(cartItem => {
           return chai.request(app)
-          .put('/api/cartItems/' + cartItem.toJSON().id)
+          .put('/cartItems/' + cartItem.toJSON().id)
           .send({ quantity: 8 })
           .then((res) => {
             expect(res).to.have.status(200);
@@ -86,7 +86,7 @@ describe('Cart Items', () => {
 
     it('it should return 404 when an invalid id is given', (done) => {
        chai.request(app)
-      .put('/api/cartItems/0')
+      .put('/cartItems/0')
       .send({ quantity: 8 })
       .then((res) => {
         expect(res).to.have.status(404);
@@ -95,7 +95,7 @@ describe('Cart Items', () => {
     });
   });
 
-  describe('DELETE /api/cartItems/:id', function() {
+  describe('DELETE /cartItems/:id', function() {
     // DELETE - delete cartItem
     it('should destroy the item', function() {
       let cart = db.Cart.create({ userId: 4})
@@ -110,7 +110,7 @@ describe('Cart Items', () => {
         })
         .then(cartItem => {
           return chai.request(app)
-            .delete(`/api/cartItems/${cartItem.toJSON().id}`)
+            .delete(`/cartItems/${cartItem.toJSON().id}`)
             .then(function(res) {
               expect(res).to.have.status(204);
             })
@@ -120,7 +120,7 @@ describe('Cart Items', () => {
 
     it('it should return 404 when an invalid id is given', (done) => {
        chai.request(app)
-      .delete('/api/cartItems/0')
+      .delete('/cartItems/0')
       .then((res) => {
         expect(res).to.have.status(404);
         done();

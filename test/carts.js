@@ -8,10 +8,10 @@ chai.use(require('chai-http'));
 const db = require('../server/models/index');
 const app = require('../app');
 
-describe('GET /api', function() {
+describe('GET ', function() {
   it('should return 200', function() {
     return chai.request(app)
-      .get('/api')
+      .get('')
       .then(function(res) {
         expect(res).to.have.status(200);
         expect(res).to.be.json;
@@ -37,11 +37,11 @@ describe('Carts', () => {
     done();
   });
 
-  describe('POST /api/carts', function() {
+  describe('POST /carts', function() {
     // POST - create new cart
     it('should create new cart', function() {
       return chai.request(app)
-        .post('/api/carts')
+        .post('/carts')
         .send({
           userId: 42
         })
@@ -57,7 +57,7 @@ describe('Carts', () => {
     // POST - Bad Request
     it('should return Bad Request', function() {
       return chai.request(app)
-        .post('/api/carts')
+        .post('/carts')
         .send({
           userId: 'forty two'
         })
@@ -67,12 +67,12 @@ describe('Carts', () => {
     });
   });
 
-  describe('GET /api/carts/:id', () => {
+  describe('GET /carts/:id', () => {
     it('it should GET a cart by the given id', (done) => {
       let cart = db.Cart.create({ userId: 1})
       .then(cart => {
         return chai.request(app)
-        .get('/api/carts/' + cart.toJSON().id)
+        .get('/carts/' + cart.toJSON().id)
         .then((res) => {
           expect(res).to.have.status(200);
           expect(res.body).to.be.a('object');
@@ -87,7 +87,7 @@ describe('Carts', () => {
 
     it('it should return 404 when an invalid id is given', (done) => {
       chai.request(app)
-      .get('/api/carts/0')
+      .get('/carts/0')
       .then((res) => {
         expect(res).to.have.status(404);
         done();
@@ -95,13 +95,13 @@ describe('Carts', () => {
     });
   });
 
-  describe('POST /api/checkout', function() {
+  describe('POST /checkout', function() {
     // POST - create new cart
     it('should checkout', function() {
       let cart = db.Cart.create({ userId: 2})
       .then(cart => {
         return chai.request(app)
-          .post('/api/checkout')
+          .post('/checkout')
           .send({
             userId: 42
           })
@@ -119,7 +119,7 @@ describe('Carts', () => {
       let cart = db.Cart.create({ userId: 2})
       .then(cart => {
         return chai.request(app)
-          .post('/api/checkout')
+          .post('/checkout')
           .send({
             userId: 0
           })
