@@ -38,7 +38,10 @@ module.exports = {
           ...address
         })
         .then(cart => res.status(200).send(cart))
-        .catch(error => res.status(400).send(error));
+        .catch(error => {
+          console.log(`cart - ERROR - 400 - ${error.name}`)
+          return res.status(400).send(error)
+        });
         } else {
           return res.status(404).send({
             message: 'Cart Not Found',

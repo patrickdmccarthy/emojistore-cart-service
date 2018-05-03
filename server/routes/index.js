@@ -11,5 +11,5 @@ module.exports = (app) => {
   app.post('/cartItems', cartitemsController.create);
   app.put('/cartItems/:id', cartitemsController.update);
   app.delete('/cartItems/:id', cartitemsController.destroy);
-  app.post('/checkout', cartsController.checkout);
+  app.put('/checkout', cartsController.checkout);
 };
